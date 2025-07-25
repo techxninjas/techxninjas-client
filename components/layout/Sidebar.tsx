@@ -1,6 +1,12 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, NavLink } from 'react-router-dom';
-import { m, LazyMotion, domAnimation, AnimatePresence } from 'framer-motion';
+import { 
+  motion,
+  LazyMotion, 
+  domAnimation, 
+  AnimatePresence 
+} from 'framer-motion';
+
 import { Theme, User } from '../../types';
 import { BRAND_NAME } from '../../constants';
 import {
@@ -85,13 +91,13 @@ const SidebarNavItem: React.FC<{
   >
     {children}
     {hasSubItems && isExpanded && (
-      <m.span
+      <motion.span
         initial={{ rotate: 0 }}
         animate={{ rotate: isSubItemActive ? 180 : 0 }}
         className="ml-auto transition-transform duration-200"
       >
         <ChevronDown className="w-4 h-4" />
-      </m.span>
+      </motion.span>
     )}
   </NavLink>
 );
@@ -119,7 +125,6 @@ const Sidebar: React.FC<SidebarProps> = ({
     onWidthChange(isEffectivelyOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH);
   }, [isEffectivelyOpen, onWidthChange]);
 
-  // Smoother hover transitions with reduced delays
   const handleMouseEnterSidebar = useCallback(() => {
     clearTimeout(timeoutRef.current);
     if (sidebarState === 'collapsed') {
@@ -133,7 +138,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         setSidebarState('collapsed');
         setActiveTooltip(null);
         setActiveSubMenu(null);
-      }, 200); // Reduced from 300ms for quicker response
+      }, 200);
     }
   }, [sidebarState]);
 
@@ -185,7 +190,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       if (isSidebarCollapsed) {
         return (
           <div className="relative w-full" ref={userDropdownRef}>
-            <m.button 
+            <motion.button 
               onClick={toggleUserDropdown} 
               className="w-full p-2 aspect-square flex items-center justify-center rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700/30 text-gray-700 dark:text-gray-300 transition-all duration-300 group"
               whileHover={{ scale: 1.05 }}
@@ -194,10 +199,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               title="User menu"
             >
               <UserCircleIcon className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
-            </m.button>
+            </motion.button>
             <AnimatePresence>
               {isUserDropdownOpen && (
-                <m.div 
+                <motion.div 
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
@@ -244,7 +249,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                       <span>{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
                     </button>
                   </div>
-                </m.div>
+                </motion.div>
               )}
             </AnimatePresence>
           </div>
@@ -252,7 +257,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       } else {
         return (
           <div className="space-y-2 w-full">
-            <m.div
+            <motion.div
               whileHover={{ x: 2 }}
               transition={{ type: 'tween', duration: 0.2 }}
             >
@@ -265,8 +270,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <UserCircleIcon className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
                 <span className="flex-shrink-0">My Profile</span>
               </Link>
-            </m.div>
-            <m.div
+            </motion.div>
+            <motion.div
               whileHover={{ x: 2 }}
               transition={{ type: 'tween', duration: 0.2 }}
             >
@@ -279,8 +284,8 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <YoutubeIcon className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
                 <span className="flex-shrink-0">Creator Dashboard</span>
               </Link>
-            </m.div>
-            <m.div
+            </motion.div>
+            <motion.div
               whileHover={{ x: 2 }}
               transition={{ type: 'tween', duration: 0.2 }}
             >
@@ -293,13 +298,13 @@ const Sidebar: React.FC<SidebarProps> = ({
                 <LogoutIcon className="w-5 h-5 mr-3 text-gray-600 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
                 <span className="flex-shrink-0">{isLoggingOut ? 'Logging out...' : 'Logout'}</span>
               </button>
-            </m.div>
+            </motion.div>
           </div>
         );
       }
     }
     return (
-      <m.button
+      <motion.button
         onClick={openAuthModal}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
@@ -322,37 +327,36 @@ const Sidebar: React.FC<SidebarProps> = ({
         ) : (
           <UserCircleIcon className="w-5 h-5" />
         )}
-      </m.button>
+      </motion.button>
     );
   };
 
   return (
     <LazyMotion features={domAnimation}>
-      <m.aside
+      <motion.aside
         ref={sidebarRef}
         onMouseEnter={handleMouseEnterSidebar}
         onMouseLeave={handleMouseLeaveSidebar}
         className={`fixed top-0 left-0 h-full bg-white dark:bg-gray-800 shadow-xl transition-all duration-300 ease-out flex flex-col py-6 z-40 border-r border-gray-200 dark:border-gray-700`}
         initial={{ width: COLLAPSED_WIDTH }}
         animate={{ width: isEffectivelyOpen ? EXPANDED_WIDTH : COLLAPSED_WIDTH }}
-        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }} // Smoother tween transition
+        transition={{ type: 'tween', duration: 0.3, ease: 'easeInOut' }}
         aria-label="Main navigation sidebar"
       >
-        {/* TechXNinjas Branding */}
         <div className={`flex items-center mb-8 ${isEffectivelyOpen ? 'px-6 justify-start' : 'px-0 justify-center'}`}>
           <Link to="/" className="flex items-center">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center text-white font-bold text-xl">
               TX
             </div>
             {isEffectivelyOpen && (
-              <m.span
+              <motion.span
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
                 className="ml-3 text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-blue-500"
               >
                 TechXNinjas
-              </m.span>
+              </motion.span>
             )}
           </Link>
         </div>
@@ -376,23 +380,23 @@ const Sidebar: React.FC<SidebarProps> = ({
                 >
                   <IconComponent className="w-5 h-5" />
                   {isEffectivelyOpen && (
-                    <m.span 
+                    <motion.span 
                       initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 }}
                       className="ml-3"
                     >
                       {link.label}
-                    </m.span>
+                    </motion.span>
                   )}
                 </SidebarNavItem>
 
                 {link.subItems && isEffectivelyOpen && isSubItemActive && (
-                  <m.div
+                  <motion.div
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2, ease: 'easeInOut' }} // Smoother submenu transition
+                    transition={{ duration: 0.2, ease: 'easeInOut' }}
                     className="ml-4 mt-1 space-y-1 overflow-hidden"
                   >
                     {link.subItems.map((subItem) => (
@@ -410,7 +414,7 @@ const Sidebar: React.FC<SidebarProps> = ({
                         {subItem}
                       </NavLink>
                     ))}
-                  </m.div>
+                  </motion.div>
                 )}
               </div>
             );
@@ -419,10 +423,10 @@ const Sidebar: React.FC<SidebarProps> = ({
 
         <div className={`mt-auto pt-6 border-t border-gray-200 dark:border-gray-700 ${isEffectivelyOpen ? 'px-4' : 'px-2'}`}>
           <div className={`flex ${isEffectivelyOpen ? 'justify-between items-center' : 'flex-col space-y-3 items-center'} mb-4 w-full`}>
-            <m.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
               <ThemeToggle />
-            </m.div>
-            <m.button 
+            </motion.div>
+            <motion.button 
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700/30 text-gray-600 dark:text-gray-300 transition-all duration-300 group relative"
@@ -431,14 +435,14 @@ const Sidebar: React.FC<SidebarProps> = ({
               <BellIcon className="w-5 h-5 group-hover:text-purple-600 dark:group-hover:text-purple-400" />
               <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
               {isEffectivelyOpen && <span className="sr-only">Notifications</span>}
-            </m.button>
+            </motion.button>
           </div>
           <div className={`${isEffectivelyOpen ? '' : 'flex flex-col items-center'}`}>
             {authControls(!isEffectivelyOpen)}
           </div>
         </div>
         
-        <m.button
+        <motion.button
           onClick={handleTogglePin}
           className="absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-brand-primary dark:text-white p-2 rounded-full shadow-lg border border-gray-200 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 z-50 transition-all duration-300"
           whileHover={{ scale: 1.1 }}
@@ -450,12 +454,12 @@ const Sidebar: React.FC<SidebarProps> = ({
           ) : (
             <PanelRightOpenIcon className="w-5 h-5" />
           )}
-        </m.button>
-      </m.aside>
+        </motion.button>
+      </motion.aside>
 
       <AnimatePresence>
         {activeTooltip && (
-          <m.div
+          <motion.div
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}
@@ -468,7 +472,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             {activeTooltip.text}
             <div className="absolute -left-1 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-gray-900 rotate-45"></div>
-          </m.div>
+          </motion.div>
         )}
       </AnimatePresence>
     </LazyMotion>
